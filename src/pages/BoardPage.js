@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../hooks/useAuth';
-import { PageContainer, Button, Spinner, LoadingCenter, Avatar, Badge } from '../components/UI';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import {
+  Avatar,
+  Button,
+  LoadingCenter,
+  PageContainer,
+  Spinner,
+} from "../components/UI";
+import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabase";
 
 const Header = styled.div`
   display: flex;
@@ -109,11 +115,11 @@ const EmptyIcon = styled.div`
 
 function timeAgo(dateStr) {
   const diff = (Date.now() - new Date(dateStr)) / 1000;
-  if (diff < 60) return '방금 전';
+  if (diff < 60) return "방금 전";
   if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
   if (diff < 2592000) return `${Math.floor(diff / 86400)}일 전`;
-  return new Date(dateStr).toLocaleDateString('ko-KR');
+  return new Date(dateStr).toLocaleDateString("ko-KR");
 }
 
 export default function BoardPage() {
@@ -125,13 +131,15 @@ export default function BoardPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       const { data, error } = await supabase
-        .from('posts')
-        .select(`
+        .from("posts")
+        .select(
+          `
           id, title, created_at,
           profiles ( username ),
           comments ( count )
-        `)
-        .order('created_at', { ascending: false });
+        `
+        )
+        .order("created_at", { ascending: false });
 
       if (!error) setPosts(data || []);
       setLoading(false);
@@ -147,42 +155,40 @@ export default function BoardPage() {
           <PostCount>{!loading && `${posts.length}개`}</PostCount>
         </Title>
         {user && (
-          <Button onClick={() => navigate('/write')} size="sm">
+          <Button onClick={() => navigate("/write")} size="sm">
             ✏️ 글쓰기
           </Button>
         )}
       </Header>
 
       {loading ? (
-        <LoadingCenter><Spinner size={32} /></LoadingCenter>
+        <LoadingCenter>
+          <Spinner size={32} />
+        </LoadingCenter>
       ) : posts.length === 0 ? (
         <EmptyState>
           <EmptyIcon>📝</EmptyIcon>
           <p>아직 작성된 글이 없어요.</p>
           {user ? (
-            <Button onClick={() => navigate('/write')}>첫 글 작성하기</Button>
+            <Button onClick={() => navigate("/write")}>첫 글 작성하기</Button>
           ) : (
-            <Button onClick={() => navigate('/login')}>로그인 후 글쓰기</Button>
+            <Button onClick={() => navigate("/login")}>로그인 후 글쓰기</Button>
           )}
         </EmptyState>
       ) : (
         <PostList>
           {posts.map((post, idx) => (
             <PostItem key={post.id} to={`/post/${post.id}`}>
-              <Avatar size={36}>
-                {(post.profiles?.username || '?')[0]}
-              </Avatar>
+              <Avatar size={36}>{(post.profiles?.username || "?")[0]}</Avatar>
               <PostInfo>
                 <PostTitle>{post.title}</PostTitle>
                 <PostMeta>
-                  <span>{post.profiles?.username || '알 수 없음'}</span>
+                  <span>{post.profiles?.username || "알 수 없음"}</span>
                   <MetaDot />
                   <span>{timeAgo(post.created_at)}</span>
                 </PostMeta>
               </PostInfo>
-              <CommentCount>
-                💬 {post.comments?.[0]?.count ?? 0}
-              </CommentCount>
+              <CommentCount>💬 {post.comments?.[0]?.count ?? 0}</CommentCount>
             </PostItem>
           ))}
         </PostList>

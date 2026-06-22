@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../hooks/useAuth';
-import { PageContainer, Card, Button, FormGroup, Label, Input, Textarea, ErrorMessage } from '../components/UI';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
+import {
+  Button,
+  Card,
+  ErrorMessage,
+  FormGroup,
+  Input,
+  Label,
+  PageContainer,
+  Textarea,
+} from "../components/UI";
+import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabase";
 
 const WriteCard = styled(Card)`
   padding: 32px;
@@ -39,49 +48,67 @@ export default function WritePage() {
   const isEdit = Boolean(id);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [error, setError] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) { navigate('/login'); return; }
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     if (isEdit) {
-      supabase.from('posts').select('*').eq('id', id).single().then(({ data, error }) => {
-        if (error || !data) { navigate('/'); return; }
-        if (data.user_id !== user.id) { navigate('/'); return; }
-        setTitle(data.title);
-        setContent(data.content);
-      });
+      supabase
+        .from("posts")
+        .select("*")
+        .eq("id", id)
+        .single()
+        .then(({ data, error }) => {
+          if (error || !data) {
+            navigate("/");
+            return;
+          }
+          if (data.user_id !== user.id) {
+            navigate("/");
+            return;
+          }
+          setTitle(data.title);
+          setContent(data.content);
+        });
     }
   }, [id, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    if (!title.trim()) return setError('제목을 입력해주세요.');
-    if (!content.trim()) return setError('내용을 입력해주세요.');
+    setError("");
+    if (!title.trim()) return setError("제목을 입력해주세요.");
+    if (!content.trim()) return setError("내용을 입력해주세요.");
 
     setLoading(true);
     try {
       if (isEdit) {
         const { error } = await supabase
-          .from('posts')
+          .from("posts")
           .update({ title: title.trim(), content: content.trim() })
-          .eq('id', id);
+          .eq("id", id);
         if (error) throw error;
         navigate(`/post/${id}`);
       } else {
         const { data, error } = await supabase
-          .from('posts')
-          .insert({ title: title.trim(), content: content.trim(), user_id: user.id })
+          .from("posts")
+          .insert({
+            title: title.trim(),
+            content: content.trim(),
+            user_id: user.id,
+          })
           .select()
           .single();
         if (error) throw error;
         navigate(`/post/${data.id}`);
       }
     } catch (err) {
-      setError('저장에 실패했습니다: ' + err.message);
+      setError("저장에 실패했습니다: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -90,7 +117,7 @@ export default function WritePage() {
   return (
     <PageContainer>
       <WriteCard>
-        <PageTitle>{isEdit ? '글 수정' : '새 글 작성'}</PageTitle>
+        <PageTitle>{isEdit ? "글 수정" : "새 글 작성"}</PageTitle>
         <Form onSubmit={handleSubmit}>
           {error && <ErrorMessage>{error}</ErrorMessage>}
           <FormGroup>
@@ -99,7 +126,7 @@ export default function WritePage() {
               id="title"
               placeholder="제목을 입력해주세요"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               maxLength={100}
               required
             />
@@ -110,16 +137,20 @@ export default function WritePage() {
               id="content"
               placeholder="내용을 입력해주세요"
               value={content}
-              onChange={e => setContent(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
               required
             />
           </FormGroup>
           <ButtonRow>
-            <Button type="button" variant="secondary" onClick={() => navigate(-1)}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => navigate(-1)}
+            >
               취소
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? '저장 중...' : isEdit ? '수정 완료' : '글 등록'}
+              {loading ? "저장 중..." : isEdit ? "수정 완료" : "글 등록"}
             </Button>
           </ButtonRow>
         </Form>

@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../hooks/useAuth';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
 import {
-  PageContainer, Card, Button, Textarea, Avatar, Spinner, LoadingCenter, Divider, ErrorMessage
-} from '../components/UI';
+  Avatar,
+  Button,
+  Card,
+  Divider,
+  ErrorMessage,
+  LoadingCenter,
+  PageContainer,
+  Spinner,
+  Textarea,
+} from "../components/UI";
+import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabase";
 
 const PostCard = styled(Card)`
   padding: 32px;
@@ -90,7 +98,9 @@ const CommentItem = styled.div`
   padding: 16px 0;
   border-bottom: 1px solid ${({ theme }) => theme.colors.borderLight};
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 `;
 
 const CommentHeader = styled.div`
@@ -153,7 +163,9 @@ const BackLink = styled(Link)`
   margin-bottom: 16px;
   transition: color 0.15s;
 
-  &:hover { color: ${({ theme }) => theme.colors.text}; }
+  &:hover {
+    color: ${({ theme }) => theme.colors.text};
+  }
 `;
 
 const LoginPrompt = styled.p`
@@ -164,16 +176,19 @@ const LoginPrompt = styled.p`
   background: ${({ theme }) => theme.colors.bg};
   border-radius: ${({ theme }) => theme.radius.md};
 
-  a { color: ${({ theme }) => theme.colors.primary}; font-weight: 600; }
+  a {
+    color: ${({ theme }) => theme.colors.primary};
+    font-weight: 600;
+  }
 `;
 
 function timeAgo(dateStr) {
   const diff = (Date.now() - new Date(dateStr)) / 1000;
-  if (diff < 60) return '방금 전';
+  if (diff < 60) return "방금 전";
   if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
   if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
   if (diff < 2592000) return `${Math.floor(diff / 86400)}일 전`;
-  return new Date(dateStr).toLocaleDateString('ko-KR');
+  return new Date(dateStr).toLocaleDateString("ko-KR");
 }
 
 export default function PostPage() {
@@ -183,27 +198,30 @@ export default function PostPage() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [commentText, setCommentText] = useState('');
+  const [commentText, setCommentText] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const fetchPost = async () => {
     const { data, error } = await supabase
-      .from('posts')
-      .select('*, profiles(username)')
-      .eq('id', id)
+      .from("posts")
+      .select("*, profiles(username)")
+      .eq("id", id)
       .single();
-    if (error || !data) { navigate('/'); return; }
+    if (error || !data) {
+      navigate("/");
+      return;
+    }
     setPost(data);
     setLoading(false);
   };
 
   const fetchComments = async () => {
     const { data } = await supabase
-      .from('comments')
-      .select('*, profiles(username)')
-      .eq('post_id', id)
-      .order('created_at', { ascending: true });
+      .from("comments")
+      .select("*, profiles(username)")
+      .eq("post_id", id)
+      .order("created_at", { ascending: true });
     setComments(data || []);
   };
 
@@ -213,38 +231,43 @@ export default function PostPage() {
   }, [id]);
 
   const handleDelete = async () => {
-    if (!window.confirm('이 글을 삭제하시겠습니까?')) return;
-    await supabase.from('posts').delete().eq('id', id);
-    navigate('/');
+    if (!window.confirm("이 글을 삭제하시겠습니까?")) return;
+    await supabase.from("posts").delete().eq("id", id);
+    navigate("/");
   };
 
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
     setSubmitting(true);
-    setError('');
-    const { error } = await supabase.from('comments').insert({
+    setError("");
+    const { error } = await supabase.from("comments").insert({
       post_id: id,
       user_id: user.id,
       content: commentText.trim(),
     });
     if (error) {
-      setError('댓글 등록에 실패했습니다.');
+      setError("댓글 등록에 실패했습니다.");
     } else {
-      setCommentText('');
+      setCommentText("");
       fetchComments();
     }
     setSubmitting(false);
   };
 
   const handleDeleteComment = async (commentId) => {
-    if (!window.confirm('이 댓글을 삭제하시겠습니까?')) return;
-    await supabase.from('comments').delete().eq('id', commentId);
+    if (!window.confirm("이 댓글을 삭제하시겠습니까?")) return;
+    await supabase.from("comments").delete().eq("id", commentId);
     fetchComments();
   };
 
-  if (loading) return <LoadingCenter><Spinner size={40} /></LoadingCenter>;
+  if (loading)
+    return (
+      <LoadingCenter>
+        <Spinner size={40} />
+      </LoadingCenter>
+    );
 
-  const username = post.profiles?.username || '알 수 없음';
+  const username = post.profiles?.username || "알 수 없음";
 
   return (
     <PageContainer>
@@ -264,8 +287,16 @@ export default function PostPage() {
             </AuthorInfo>
             {user?.id === post.user_id && (
               <ActionButtons>
-                <Button size="sm" variant="ghost" onClick={() => navigate(`/edit/${id}`)}>수정</Button>
-                <Button size="sm" variant="danger" onClick={handleDelete}>삭제</Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => navigate(`/edit/${id}`)}
+                >
+                  수정
+                </Button>
+                <Button size="sm" variant="danger" onClick={handleDelete}>
+                  삭제
+                </Button>
               </ActionButtons>
             )}
           </MetaRow>
@@ -280,16 +311,26 @@ export default function PostPage() {
         </CommentsTitle>
 
         <CommentList>
-          {comments.map(comment => (
+          {comments.map((comment) => (
             <CommentItem key={comment.id}>
               <CommentHeader>
                 <CommentAuthor>
-                  <Avatar size={26}>{(comment.profiles?.username || '?')[0]}</Avatar>
-                  <CommentName>{comment.profiles?.username || '알 수 없음'}</CommentName>
+                  <Avatar size={26}>
+                    {(comment.profiles?.username || "?")[0]}
+                  </Avatar>
+                  <CommentName>
+                    {comment.profiles?.username || "알 수 없음"}
+                  </CommentName>
                   <CommentDate>{timeAgo(comment.created_at)}</CommentDate>
                 </CommentAuthor>
                 {user?.id === comment.user_id && (
-                  <Button size="sm" variant="ghost" onClick={() => handleDeleteComment(comment.id)}>삭제</Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    삭제
+                  </Button>
                 )}
               </CommentHeader>
               <CommentContent>{comment.content}</CommentContent>
@@ -302,17 +343,25 @@ export default function PostPage() {
             <Divider my="4px" />
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <CommentRow>
-              <Avatar size={34}>{(user.user_metadata?.username || user.email[0]).toUpperCase()}</Avatar>
+              <Avatar size={34}>
+                {(user.user_metadata?.username || user.email[0]).toUpperCase()}
+              </Avatar>
               <CommentInput
                 placeholder="댓글을 입력해주세요..."
                 value={commentText}
-                onChange={e => setCommentText(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && e.metaKey) handleCommentSubmit(); }}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && e.metaKey) handleCommentSubmit();
+                }}
               />
             </CommentRow>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button size="sm" onClick={handleCommentSubmit} disabled={submitting || !commentText.trim()}>
-                {submitting ? '등록 중...' : '댓글 등록'}
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                size="sm"
+                onClick={handleCommentSubmit}
+                disabled={submitting || !commentText.trim()}
+              >
+                {submitting ? "등록 중..." : "댓글 등록"}
               </Button>
             </div>
           </CommentForm>

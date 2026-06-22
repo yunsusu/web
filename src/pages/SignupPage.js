@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { useAuth } from '../hooks/useAuth';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import {
-  CenterContainer, Card, Button, FormGroup, Label, Input, ErrorMessage
-} from '../components/UI';
+  Button,
+  Card,
+  CenterContainer,
+  ErrorMessage,
+  FormGroup,
+  Input,
+  Label,
+} from "../components/UI";
+import { useAuth } from "../hooks/useAuth";
 
 const Wrapper = styled(CenterContainer)`
   background: ${({ theme }) => theme.colors.bg};
@@ -38,11 +44,11 @@ const Form = styled.form`
 
 const SuccessBox = styled.div`
   padding: 16px;
-  background: #ECFDF5;
-  border: 1px solid #10B981;
+  background: #ecfdf5;
+  border: 1px solid #10b981;
   border-radius: ${({ theme }) => theme.radius.md};
   font-size: 14px;
-  color: #065F46;
+  color: #065f46;
   text-align: center;
 `;
 
@@ -55,7 +61,9 @@ const Footer = styled.p`
   a {
     color: ${({ theme }) => theme.colors.primary};
     font-weight: 600;
-    &:hover { text-decoration: underline; }
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -72,34 +80,40 @@ const HintText = styled.p`
 export default function SignupPage() {
   const { signUp } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '', passwordConfirm: '', username: '' });
-  const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    username: "",
+  });
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (form.password !== form.passwordConfirm) {
-      return setError('비밀번호가 일치하지 않습니다.');
+      return setError("비밀번호가 일치하지 않습니다.");
     }
     if (form.password.length < 6) {
-      return setError('비밀번호는 최소 6자 이상이어야 합니다.');
+      return setError("비밀번호는 최소 6자 이상이어야 합니다.");
     }
     if (form.username.trim().length < 2) {
-      return setError('닉네임은 최소 2자 이상이어야 합니다.');
+      return setError("닉네임은 최소 2자 이상이어야 합니다.");
     }
 
     setLoading(true);
     try {
       await signUp(form.email, form.password, form.username.trim());
       setSuccess(true);
-      setTimeout(() => navigate('/login'), 3000);
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      setError(err.message || '회원가입에 실패했습니다. 다시 시도해주세요.');
+      setError(err.message || "회원가입에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setLoading(false);
     }
@@ -108,13 +122,18 @@ export default function SignupPage() {
   return (
     <Wrapper>
       <SignupCard>
-        <Title>Board<Accent>.</Accent> 회원가입</Title>
+        <Title>
+          Board<Accent>.</Accent> 회원가입
+        </Title>
         <Subtitle>새 계정을 만들어 커뮤니티에 참여하세요</Subtitle>
 
         {success ? (
           <SuccessBox>
-            ✅ 가입 완료! 이메일을 확인하여 계정을 인증해주세요.<br />
-            <small style={{ opacity: 0.8 }}>3초 후 로그인 페이지로 이동합니다.</small>
+            ✅ 가입 완료! 이메일을 확인하여 계정을 인증해주세요.
+            <br />
+            <small style={{ opacity: 0.8 }}>
+              3초 후 로그인 페이지로 이동합니다.
+            </small>
           </SuccessBox>
         ) : (
           <Form onSubmit={handleSubmit}>
@@ -168,7 +187,7 @@ export default function SignupPage() {
               />
             </FormGroup>
             <Button type="submit" disabled={loading} style={{ marginTop: 4 }}>
-              {loading ? '가입 중...' : '회원가입'}
+              {loading ? "가입 중..." : "회원가입"}
             </Button>
           </Form>
         )}
