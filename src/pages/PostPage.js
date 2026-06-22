@@ -228,7 +228,7 @@ export default function PostPage() {
   useEffect(() => {
     fetchPost();
     fetchComments();
-  }, [id]);
+  }, [id, fetchPost, fetchComments]);
 
   const handleDelete = async () => {
     if (!window.confirm("이 글을 삭제하시겠습니까?")) return;

@@ -77,7 +77,7 @@ export default function WritePage() {
           setContent(data.content);
         });
     }
-  }, [id, user]);
+  }, [id, user, isEdit, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

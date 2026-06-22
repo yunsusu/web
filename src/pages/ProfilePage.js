@@ -194,14 +194,16 @@ export default function ProfilePage() {
             .limit(10),
           supabase.from("comments").select("id").eq("user_id", user.id),
         ]);
+
       setProfile(prof);
       setUsername(prof?.username || "");
       setMyPosts(posts || []);
       setMyComments(coms || []);
       setLoading(false);
     };
+
     load();
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSave = async (e) => {
     e.preventDefault();
