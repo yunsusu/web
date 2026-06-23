@@ -137,7 +137,7 @@ export default function SignupPage() {
           </SuccessBox>
         ) : (
           <Form onSubmit={handleSubmit}>
-            {error && <ErrorMessage>{error}</ErrorMessage>}
+            {error && <ErrorMessage data-cy="error">{error}</ErrorMessage>}
             <FormGroup>
               <Label htmlFor="username">닉네임</Label>
               <Input
@@ -147,6 +147,7 @@ export default function SignupPage() {
                 value={form.username}
                 onChange={handleChange}
                 required
+                data-cy="nickname"
               />
             </FormGroup>
             <FormGroup>
@@ -159,6 +160,7 @@ export default function SignupPage() {
                 value={form.email}
                 onChange={handleChange}
                 required
+                data-cy="email"
               />
             </FormGroup>
             <FormGroup>
@@ -171,6 +173,7 @@ export default function SignupPage() {
                 value={form.password}
                 onChange={handleChange}
                 required
+                data-cy="password"
               />
               <HintText>6자 이상 입력해주세요</HintText>
             </FormGroup>
@@ -184,9 +187,15 @@ export default function SignupPage() {
                 value={form.passwordConfirm}
                 onChange={handleChange}
                 required
+                data-cy="passwordConfirm"
               />
             </FormGroup>
-            <Button type="submit" disabled={loading} style={{ marginTop: 4 }}>
+            <Button
+              type="submit"
+              disabled={loading}
+              style={{ marginTop: 4 }}
+              data-cy="submit"
+            >
               {loading ? "가입 중..." : "회원가입"}
             </Button>
           </Form>

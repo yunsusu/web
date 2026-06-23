@@ -155,31 +155,31 @@ export default function Navbar() {
   return (
     <Nav>
       <NavInner>
-        <Logo to="/">
+        <Logo to="/" data-cy="gnb-logo">
           Board<span>.</span>
         </Logo>
         <NavLinks>
-          <NavLink to="/" $active={location.pathname === '/' ? 1 : 0}>게시판</NavLink>
+          <NavLink to="/" $active={location.pathname === '/' ? 1 : 0} data-cy="gnb-board">게시판</NavLink>
           {user && (
-            <NavLink to="/write" $active={location.pathname === '/write' ? 1 : 0}>글쓰기</NavLink>
+            <NavLink to="/write" $active={location.pathname === '/write' ? 1 : 0} data-cy="gnb-write">글쓰기</NavLink>
           )}
         </NavLinks>
         <NavRight>
           {user ? (
             <UserMenu>
-              <UserButton onClick={() => setMenuOpen(o => !o)}>
+              <UserButton onClick={() => setMenuOpen(o => !o)} data-cy="gnb-user-button">
                 <Avatar size={28}>{username[0]}</Avatar>
                 <UserName>{username}</UserName>
               </UserButton>
               <Dropdown $open={menuOpen}>
-                <DropdownItem to="/profile" onClick={() => setMenuOpen(false)}>내 정보</DropdownItem>
-                <DropdownButton onClick={handleSignOut}>로그아웃</DropdownButton>
+                <DropdownItem to="/profile" onClick={() => setMenuOpen(false)} data-cy="gnb-profile">내 정보</DropdownItem>
+                <DropdownButton onClick={handleSignOut} data-cy="gnb-logout">로그아웃</DropdownButton>
               </Dropdown>
             </UserMenu>
           ) : (
             <>
-              <Button as={Link} to="/login" variant="ghost" size="sm">로그인</Button>
-              <Button as={Link} to="/signup" size="sm">회원가입</Button>
+              <Button as={Link} to="/login" variant="ghost" size="sm" data-cy="gnb-login">로그인</Button>
+              <Button as={Link} to="/signup" size="sm" data-cy="gnb-signup">회원가입</Button>
             </>
           )}
         </NavRight>

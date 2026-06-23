@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -101,6 +101,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              data-cy="loginEmail"
             />
           </FormGroup>
           <FormGroup>
@@ -112,9 +113,15 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              data-cy="loginPass"
             />
           </FormGroup>
-          <Button type="submit" disabled={loading} style={{ marginTop: 4 }}>
+          <Button
+            type="submit"
+            disabled={loading}
+            style={{ marginTop: 4 }}
+            data-cy="loginSubmit"
+          >
             {loading ? "로그인 중..." : "로그인"}
           </Button>
         </Form>

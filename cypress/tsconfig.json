@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "lib": ["es2015", "dom"],
+    "types": ["cypress", "node"]
+  },
+  "include": ["**/*"]
+}
