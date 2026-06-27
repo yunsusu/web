@@ -26,9 +26,13 @@
 
 // 로그인 상태가 필요한 테스트에서 beforeEach(() => cy.login()) 으로 사용
 Cypress.Commands.add("login", (email, password) => {
+  cy.intercept("POST", "**/auth/v1/token**").as("login");
+
   cy.visit("/login");
   cy.get('[data-cy="loginEmail"]').type(email);
   cy.get('[data-cy="loginPass"]').type(password);
   cy.get('[data-cy="loginSubmit"]').click();
+
+  cy.wait("@login");
   cy.url().should("eq", Cypress.config("baseUrl") + "/");
 });
