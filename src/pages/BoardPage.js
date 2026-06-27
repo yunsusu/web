@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -137,7 +137,7 @@ export default function BoardPage() {
           id, title, created_at,
           profiles ( username ),
           comments ( count )
-        `
+        `,
         )
         .order("created_at", { ascending: false });
 
@@ -176,7 +176,7 @@ export default function BoardPage() {
           )}
         </EmptyState>
       ) : (
-        <PostList>
+        <PostList data-cy="postList">
           {posts.map((post, idx) => (
             <PostItem key={post.id} to={`/post/${post.id}`}>
               <Avatar size={36}>{(post.profiles?.username || "?")[0]}</Avatar>

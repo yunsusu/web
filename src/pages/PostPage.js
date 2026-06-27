@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -290,11 +290,17 @@ export default function PostPage() {
                 <Button
                   size="sm"
                   variant="ghost"
+                  data-cy="editPost"
                   onClick={() => navigate(`/edit/${id}`)}
                 >
                   수정
                 </Button>
-                <Button size="sm" variant="danger" onClick={handleDelete}>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  data-cy="deletePost"
+                  onClick={handleDelete}
+                >
                   삭제
                 </Button>
               </ActionButtons>
@@ -328,6 +334,7 @@ export default function PostPage() {
                     size="sm"
                     variant="ghost"
                     onClick={() => handleDeleteComment(comment.id)}
+                    data-cy="deleteBtn"
                   >
                     삭제
                   </Button>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import { useAuth } from '../hooks/useAuth';
-import { Avatar, Button } from './UI';
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useAuth } from "../hooks/useAuth";
+import { Avatar, Button } from "./UI";
 
 const Nav = styled.nav`
   background: rgba(255, 255, 255, 0.92);
@@ -49,9 +49,11 @@ const NavLink = styled(Link)`
   padding: 6px 14px;
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme, $active }) => $active ? theme.colors.primary : theme.colors.textMuted};
+  color: ${({ theme, $active }) =>
+    $active ? theme.colors.primary : theme.colors.textMuted};
   border-radius: ${({ theme }) => theme.radius.md};
-  background: ${({ theme, $active }) => $active ? theme.colors.primaryLight : 'transparent'};
+  background: ${({ theme, $active }) =>
+    $active ? theme.colors.primaryLight : "transparent"};
   transition: all 0.15s;
 
   &:hover {
@@ -103,7 +105,7 @@ const Dropdown = styled.div`
   box-shadow: ${({ theme }) => theme.shadow.lg};
   min-width: 160px;
   padding: 6px;
-  display: ${({ $open }) => $open ? 'block' : 'none'};
+  display: ${({ $open }) => ($open ? "block" : "none")};
   z-index: 200;
 `;
 
@@ -144,12 +146,13 @@ export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const username = user?.user_metadata?.username || user?.email?.split('@')[0] || '?';
+  const username =
+    user?.user_metadata?.username || user?.email?.split("@")[0] || "?";
 
   const handleSignOut = async () => {
     await signOut();
     setMenuOpen(false);
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -159,27 +162,60 @@ export default function Navbar() {
           Board<span>.</span>
         </Logo>
         <NavLinks>
-          <NavLink to="/" $active={location.pathname === '/' ? 1 : 0} data-cy="gnb-board">게시판</NavLink>
+          <NavLink
+            to="/"
+            $active={location.pathname === "/" ? 1 : 0}
+            data-cy="gnb-board"
+          >
+            게시판
+          </NavLink>
           {user && (
-            <NavLink to="/write" $active={location.pathname === '/write' ? 1 : 0} data-cy="gnb-write">글쓰기</NavLink>
+            <NavLink
+              to="/write"
+              $active={location.pathname === "/write" ? 1 : 0}
+              data-cy="gnb-write"
+            >
+              글쓰기
+            </NavLink>
           )}
         </NavLinks>
         <NavRight>
           {user ? (
             <UserMenu>
-              <UserButton onClick={() => setMenuOpen(o => !o)} data-cy="gnb-user-button">
+              <UserButton
+                onClick={() => setMenuOpen((o) => !o)}
+                data-cy="gnb-user-button"
+              >
                 <Avatar size={28}>{username[0]}</Avatar>
-                <UserName>{username}</UserName>
+                <UserName data-cy="username">{username}</UserName>
               </UserButton>
               <Dropdown $open={menuOpen}>
-                <DropdownItem to="/profile" onClick={() => setMenuOpen(false)} data-cy="gnb-profile">내 정보</DropdownItem>
-                <DropdownButton onClick={handleSignOut} data-cy="gnb-logout">로그아웃</DropdownButton>
+                <DropdownItem
+                  to="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  data-cy="gnb-profile"
+                >
+                  내 정보
+                </DropdownItem>
+                <DropdownButton onClick={handleSignOut} data-cy="gnb-logout">
+                  로그아웃
+                </DropdownButton>
               </Dropdown>
             </UserMenu>
           ) : (
             <>
-              <Button as={Link} to="/login" variant="ghost" size="sm" data-cy="gnb-login">로그인</Button>
-              <Button as={Link} to="/signup" size="sm" data-cy="gnb-signup">회원가입</Button>
+              <Button
+                as={Link}
+                to="/login"
+                variant="ghost"
+                size="sm"
+                data-cy="gnb-login"
+              >
+                로그인
+              </Button>
+              <Button as={Link} to="/signup" size="sm" data-cy="gnb-signup">
+                회원가입
+              </Button>
             </>
           )}
         </NavRight>

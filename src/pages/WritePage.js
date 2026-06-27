@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -129,6 +129,7 @@ export default function WritePage() {
               onChange={(e) => setTitle(e.target.value)}
               maxLength={100}
               required
+              data-cy="writeTitle"
             />
           </FormGroup>
           <FormGroup>
@@ -139,6 +140,7 @@ export default function WritePage() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
+              data-cy="writeContent"
             />
           </FormGroup>
           <ButtonRow>
@@ -146,10 +148,11 @@ export default function WritePage() {
               type="button"
               variant="secondary"
               onClick={() => navigate(-1)}
+              data-cy="writeBack"
             >
               취소
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} data-cy="writeSubmit">
               {loading ? "저장 중..." : isEdit ? "수정 완료" : "글 등록"}
             </Button>
           </ButtonRow>
