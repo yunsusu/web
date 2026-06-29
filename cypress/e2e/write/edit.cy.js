@@ -3,6 +3,9 @@ describe("글쓰기 테스트", () => {
     cy.login("test@email.com", "1q2w3e");
   });
   it("글 등록 후 수정하기", () => {
+    cy.intercept("POST", "**/posts?select=*").as("PostWrite");
+    cy.intercept("OPTIONS", "**/posts?id=**").as("PutWrite");
+
     // Given : 글 작성 후 글 페이지에서
     cy.visit("/write");
     cy.get('[data-cy="writeTitle"]').as("title");
@@ -12,6 +15,8 @@ describe("글쓰기 테스트", () => {
     cy.get("@content").type("내용 테스트 123 asdf");
 
     cy.get('[data-cy="writeSubmit"]').click();
+
+    cy.wait("@PostWrite");
 
     cy.url()
       .should("include", "/post/")
@@ -29,6 +34,7 @@ describe("글쓰기 테스트", () => {
 
     cy.get('[data-cy="writeSubmit"]').click();
 
+    cy.wait("@PutWrite");
     // Then : 수정된 제목과 내용을 등록한다.
     cy.url()
       .should("include", "/post/")

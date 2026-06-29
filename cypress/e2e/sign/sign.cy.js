@@ -1,5 +1,6 @@
 describe("회원가입 테스트", () => {
   it("회원가입 정상 시도", () => {
+    cy.intercept("post", "**/signup").as("sign");
     const date = Date.now();
     const name = "test" + date;
 
@@ -19,6 +20,9 @@ describe("회원가입 테스트", () => {
     cy.get("@passwordConfirm").type("qwe123");
     // Then : 정상적으로 회원가입을 한다.
     cy.get('[data-cy="submit"]').click();
+
+    cy.wait("@sign");
+
     cy.url().should("include", "/login");
   });
   it("회원가입 비밀번호 확인 틀릴 경우", () => {
@@ -49,13 +53,14 @@ describe("회원가입 테스트", () => {
 
 describe("로그인 테스트", () => {
   it("로그인 정상 시도", () => {
-    // Given : 로그인 페이지에 접속
-    cy.visit("/login");
-    // When : 이메일과 비밀번호를 입력해 로그인 버튼을 눌러
-    cy.get('[data-cy="loginEmail"]').type("test@email.com");
-    cy.get('[data-cy="loginPass"]').type("1q2w3e");
-    // Then : 정상적으로 로그인 한다.
-    cy.get('[data-cy="loginSubmit"]').click();
-    cy.url().should("eq", Cypress.config("baseUrl") + "/");
+    cy.login("test@email.com", "1q2w3e");
+    // // Given : 로그인 페이지에 접속
+    // cy.visit("/login");
+    // // When : 이메일과 비밀번호를 입력해 로그인 버튼을 눌러
+    // cy.get('[data-cy="loginEmail"]').type("test@email.com");
+    // cy.get('[data-cy="loginPass"]').type("1q2w3e");
+    // // Then : 정상적으로 로그인 한다.
+    // cy.get('[data-cy="loginSubmit"]').click();
+    // cy.url().should("eq", Cypress.config("baseUrl") + "/");
   });
 });
