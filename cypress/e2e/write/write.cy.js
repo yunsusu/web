@@ -3,27 +3,28 @@ describe("글쓰기 테스트", () => {
     cy.login("test@email.com", "1q2w3e");
   });
   it("글 등록 후 삭제", () => {
-    cy.intercept("POST", "**/posts?select=*").as("PostWrite");
+    cy.createPost();
+    // cy.intercept("POST", "**/posts?select=*").as("PostWrite");
 
-    // Given : 글쓰기 페이지에서
-    cy.visit("/write");
-    // When : 제목과 내용을 입력 후 등록 버튼을 눌러
-    cy.get('[data-cy="writeTitle"]').as("title");
-    cy.get('[data-cy="writeContent"]').as("content");
+    // // Given : 글쓰기 페이지에서
+    // cy.visit("/write");
+    // // When : 제목과 내용을 입력 후 등록 버튼을 눌러
+    // cy.get('[data-cy="writeTitle"]').as("title");
+    // cy.get('[data-cy="writeContent"]').as("content");
 
-    cy.get("@title").type("제목 테스트 123 asdf");
-    cy.get("@content").type("내용 테스트 123 asdf");
+    // cy.get("@title").type("제목 테스트 123 asdf");
+    // cy.get("@content").type("내용 테스트 123 asdf");
 
-    cy.get('[data-cy="writeSubmit"]').click();
-    // Then : 정상적으로 글이 게시판에 등록된다.
-    cy.wait("@PostWrite");
+    // cy.get('[data-cy="writeSubmit"]').click();
+    // // Then : 정상적으로 글이 게시판에 등록된다.
+    // cy.wait("@PostWrite");
 
-    cy.url()
-      .should("include", "/post/")
-      .then((url) => {
-        const postId = url.split("/post/")[1];
-        cy.url().should("eq", `${Cypress.config("baseUrl")}/post/${postId}`);
-      });
+    // cy.url()
+    //   .should("include", "/post/")
+    //   .then((url) => {
+    //     const postId = url.split("/post/")[1];
+    //     cy.url().should("eq", `${Cypress.config("baseUrl")}/post/${postId}`);
+    //   });
 
     // 삭제 API 요청 인터셉트
     cy.intercept("DELETE", "**/posts*").as("deletePost");

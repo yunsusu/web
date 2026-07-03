@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import {
   Avatar,
   Button,
@@ -11,10 +11,10 @@ import {
   Label,
   LoadingCenter,
   PageContainer,
-  Spinner
-} from '../components/UI';
-import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
+  Spinner,
+} from "../components/UI";
+import { useAuth } from "../hooks/useAuth";
+import { supabase } from "../lib/supabase";
 
 const Grid = styled.div`
   display: grid;
@@ -64,7 +64,9 @@ const Stat = styled.div`
   text-align: center;
   border-right: 1px solid ${({ theme }) => theme.colors.border};
 
-  &:last-child { border-right: none; }
+  &:last-child {
+    border-right: none;
+  }
 `;
 
 const StatValue = styled.div`
@@ -126,7 +128,9 @@ const MyPostItem = styled(Link)`
   background: ${({ theme }) => theme.colors.bgWhite};
   transition: background 0.12s;
 
-  &:hover { background: ${({ theme }) => theme.colors.bg}; }
+  &:hover {
+    background: ${({ theme }) => theme.colors.bg};
+  }
 `;
 
 const PostTitle = styled.span`
@@ -157,7 +161,7 @@ function timeAgo(dateStr) {
   const diff = (Date.now() - new Date(dateStr)) / 1000;
   if (diff < 86400) return `${Math.floor(diff / 3600) || 1}시간 전`;
   if (diff < 2592000) return `${Math.floor(diff / 86400)}일 전`;
-  return new Date(dateStr).toLocaleDateString('ko-KR');
+  return new Date(dateStr).toLocaleDateString("ko-KR");
 }
 
 export default function ProfilePage() {
@@ -167,22 +171,31 @@ export default function ProfilePage() {
   const [myPosts, setMyPosts] = useState([]);
   const [myComments, setMyComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    if (!user) { navigate('/login'); return; }
+    if (!user) {
+      navigate("/login");
+      return;
+    }
 
     const load = async () => {
-      const [{ data: prof }, { data: posts }, { data: coms }] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', user.id).single(),
-        supabase.from('posts').select('id, title, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
-        supabase.from('comments').select('id').eq('user_id', user.id),
-      ]);
+      const [{ data: prof }, { data: posts }, { data: coms }] =
+        await Promise.all([
+          supabase.from("profiles").select("*").eq("id", user.id).single(),
+          supabase
+            .from("posts")
+            .select("id, title, created_at")
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(10),
+          supabase.from("comments").select("id").eq("user_id", user.id),
+        ]);
       setProfile(prof);
-      setUsername(prof?.username || '');
+      setUsername(prof?.username || "");
       setMyPosts(posts || []);
       setMyComments(coms || []);
       setLoading(false);
@@ -192,29 +205,37 @@ export default function ProfilePage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (username.trim().length < 2) return setError('닉네임은 2자 이상이어야 합니다.');
+    if (username.trim().length < 2)
+      return setError("닉네임은 2자 이상이어야 합니다.");
     setSaving(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     try {
       await updateProfile({ username: username.trim() });
       await supabase.auth.updateUser({ data: { username: username.trim() } });
-      setSuccess('프로필이 저장되었습니다.');
+      setSuccess("프로필이 저장되었습니다.");
     } catch (err) {
-      setError('저장에 실패했습니다: ' + err.message);
+      setError("저장에 실패했습니다: " + err.message);
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <LoadingCenter><Spinner size={40} /></LoadingCenter>;
+  if (loading)
+    return (
+      <LoadingCenter>
+        <Spinner size={40} />
+      </LoadingCenter>
+    );
 
   return (
     <PageContainer>
       <Grid>
         <ProfileCard>
-          <BigAvatar size={72}>{(username || '?')[0]}</BigAvatar>
-          <ProfileName>{profile?.username || '이름 없음'}</ProfileName>
+          <BigAvatar size={72}>{(username || "?")[0]}</BigAvatar>
+          <ProfileName data-cy="profileName">
+            {profile?.username || "이름 없음"}
+          </ProfileName>
           <ProfileEmail>{user?.email}</ProfileEmail>
           <StatRow>
             <Stat>
@@ -228,7 +249,7 @@ export default function ProfilePage() {
           </StatRow>
         </ProfileCard>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <MainCard>
             <SectionTitle>프로필 편집</SectionTitle>
             <EditForm onSubmit={handleSave}>
@@ -243,13 +264,19 @@ export default function ProfilePage() {
                 <Input
                   id="username"
                   value={username}
-                  onChange={e => setUsername(e.target.value)}
+                  onChange={(e) => setUsername(e.target.value)}
                   placeholder="닉네임을 입력하세요"
+                  data-cy="nameChange"
                 />
               </FormGroup>
               <ButtonRow>
-                <Button type="submit" disabled={saving} size="sm">
-                  {saving ? '저장 중...' : '저장'}
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  size="sm"
+                  data-cy="submitChange"
+                >
+                  {saving ? "저장 중..." : "저장"}
                 </Button>
               </ButtonRow>
             </EditForm>
@@ -261,7 +288,7 @@ export default function ProfilePage() {
               <EmptyText>아직 작성한 글이 없습니다.</EmptyText>
             ) : (
               <MyPostList>
-                {myPosts.map(post => (
+                {myPosts.map((post) => (
                   <MyPostItem key={post.id} to={`/post/${post.id}`}>
                     <PostTitle>{post.title}</PostTitle>
                     <PostDate>{timeAgo(post.created_at)}</PostDate>

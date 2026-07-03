@@ -318,7 +318,7 @@ export default function PostPage() {
 
         <CommentList>
           {comments.map((comment) => (
-            <CommentItem key={comment.id}>
+            <CommentItem key={comment.id} data-cy="commentBox">
               <CommentHeader>
                 <CommentAuthor>
                   <Avatar size={26}>
@@ -351,7 +351,9 @@ export default function PostPage() {
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <CommentRow>
               <Avatar size={34}>
-                {(user.user_metadata?.username || user.email[0]).toUpperCase()}
+                {(user.user_metadata?.username || user.email[0])
+                  .toUpperCase()
+                  .slice(0, 1)}
               </Avatar>
               <CommentInput
                 placeholder="댓글을 입력해주세요..."
@@ -360,6 +362,7 @@ export default function PostPage() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && e.metaKey) handleCommentSubmit();
                 }}
+                data-cy="writeComment"
               />
             </CommentRow>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -367,6 +370,7 @@ export default function PostPage() {
                 size="sm"
                 onClick={handleCommentSubmit}
                 disabled={submitting || !commentText.trim()}
+                data-cy="postComment"
               >
                 {submitting ? "등록 중..." : "댓글 등록"}
               </Button>
