@@ -49,6 +49,30 @@ describe("회원가입 테스트", () => {
       .should("be.visible")
       .and("have.text", "비밀번호가 일치하지 않습니다.");
   });
+  it("이미 있는 이메일로 회원가입 시도할 경우", () => {
+    cy.intercept("post", "**/signup").as("sign");
+
+    // Given : 회원가입 페이지에 접속
+    cy.visit("/signup");
+    // When : 닉네임, 중복된 이메일, 비밀번호, 비밀번호 확인 을 입력 후 회원가입 버튼을 눌러
+    cy.get('[data-cy="nickname"]').as("nickname");
+    cy.get("@nickname").type("name");
+
+    cy.get('[data-cy="email"]').as("email");
+    cy.get("@email").type(`test@email.com`);
+
+    cy.get('[data-cy="password"]').as("password");
+    cy.get("@password").type("qwe123");
+
+    cy.get('[data-cy="passwordConfirm"]').as("passwordConfirm");
+    cy.get("@passwordConfirm").type("qwe123");
+    // Then : 정상적으로 회원가입을 한다.
+    cy.get('[data-cy="submit"]').click();
+
+    cy.wait("@sign").its("response.statusCode").should("be.oneOf", [404, 422]);
+
+    cy.contains("User already registered");
+  });
 });
 
 describe("로그인 테스트", () => {

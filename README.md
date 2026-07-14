@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+https://yun-sandy.vercel.app/
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### **🌟 프로젝트 개요**
 
-## Available Scripts
+**React.js와 Supabase**를 활용해 AI와 함께 만든 간단한 게시판 웹을 Cypress를 사용해 자동화 테스트 적용했습니다.
 
-In the project directory, you can run:
+로그인, 회원가입, 게시글 작성 등 주요 웹 기능의 API 통신과 화면 렌더링을 테스트하였으며, **BDD(Behavior-Driven Development)** 방식으로 테스트를 설계 및 구현하였습니다.
 
-### `npm start`
+## 📋 테스트 범위
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 로그인
+- 회원가입
+- 로그아웃
+- 게시글 작성
+- 게시글 수정
+- 게시글 삭제
+- 댓글 작성
+- 댓글 삭제
+- 페이지 이동(URL 검증)
+- API 응답 상태 코드 검증
+- 화면 렌더링 검증
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## **📝 자동화 테스트 적용**
 
-### `npm test`
+**✅ 자동화 결과**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**✅ Cypress의 Commands 기능을 활용해 로그인이 필요한 화면에서 로그인 후 진행이 가능하도록 구현.**
 
-### `npm run build`
+```jsx
+Cypress.Commands.add("login", (email, password) => {
+  cy.intercept("POST", "**/auth/v1/token**").as("login");
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  cy.visit("/login");
+  cy.get('[data-cy="loginEmail"]').type(email);
+  cy.get('[data-cy="loginPass"]').type(password);
+  cy.get('[data-cy="loginSubmit"]').click();
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  cy.wait("@login");
+  cy.url().should("eq", Cypress.config("baseUrl") + "/");
+});
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**✅ intercept 기능을 활용해 통신이 정상적으로 되는지 테스트 구현.**
 
-### `npm run eject`
+```jsx
+it("이미 있는 이메일로 회원가입 시도할 경우", () => {
+  cy.intercept("post", "**/signup").as("sign");
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  // Given : 회원가입 페이지에 접속
+  cy.visit("/signup");
+  // When : 닉네임, 중복된 이메일, 비밀번호, 비밀번호 확인 을 입력 후 회원가입 버튼을 눌러
+  cy.get('[data-cy="nickname"]').as("nickname");
+  cy.get("@nickname").type("name");
+  // ...
+  // Then : 정상적으로 회원가입을 한다.
+  cy.get('[data-cy="submit"]').click();
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  cy.wait("@sign").its("response.statusCode").should("be.oneOf", [404, 422]);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  cy.contains("User already registered");
+});
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 💡 테스트 작성 시 고려한 점
 
-## Learn More
+- Commands를 활용하여 로그인 로직을 공통화
+- intercept를 활용해 API 응답 검증
+- data-cy 속성을 사용하여 안정적인 Element 선택
+- 하나의 테스트는 하나의 기능만 검증하도록 구성
+- Given-When-Then 패턴으로 가독성 향상
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 📚 배운 점
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 반복되는 테스트를 Commands로 공통화하는 방법을 익혔습니다.
+- API와 UI를 함께 검증하여 기능의 신뢰성을 높이는 방법을 경험했습니다.
+- QA로써 자동화를 어떤식으로 활용할 수 있을지 고민해볼 수 있었습니다.

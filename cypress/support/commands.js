@@ -49,6 +49,9 @@ Cypress.Commands.add("createPost", () => {
   cy.get("@title").type("제목 테스트 123 asdf");
   cy.get("@content").type("내용 테스트 123 asdf");
 
+  cy.get("@title").should("not.have.value", "");
+  cy.get("@content").should("not.have.value", "");
+
   cy.get('[data-cy="writeSubmit"]').click();
   // Then : 정상적으로 글이 게시판에 등록된다.
   cy.wait("@PostWrite");
