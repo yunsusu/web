@@ -1,4 +1,8 @@
-https://yun-sandy.vercel.app/
+## 🔗 Link
+
+- **Web** : https://yun-sandy.vercel.app/
+- **상세 내용(Notion)** : https://yunsusu.notion.site/39d105638024802b9c6acfd9bd138335
+
 
 ### **🌟 프로젝트 개요**
 
