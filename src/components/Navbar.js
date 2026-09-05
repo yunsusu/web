@@ -169,6 +169,23 @@ export default function Navbar() {
           >
             게시판
           </NavLink>
+          <a
+            href="/QA_Copy.zip"
+            download
+            style={{
+              padding: "6px 14px",
+              fontSize: "14px",
+              fontWeight: 500,
+              color: "rgba(0, 0, 0, 0.1)",
+              borderRadius: "10px",
+              // background: "rgb(255, 255, 255)",
+              transition: "0.15s",
+              textDecoration: "none",
+              display: "inline-block",
+            }}
+          >
+            확장 프로그램 다운로드
+          </a>
           {user && (
             <NavLink
               to="/write"
