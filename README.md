@@ -1,4 +1,8 @@
-https://yun-sandy.vercel.app/
+## 🔗 Link
+
+- **Web** : https://yun-sandy.vercel.app/
+- **상세 내용(Notion)** : https://yunsusu.notion.site/39d105638024802b9c6acfd9bd138335
+
 
 ### **🌟 프로젝트 개요**
 
@@ -23,6 +27,10 @@ https://yun-sandy.vercel.app/
 ## **📝 자동화 테스트 적용**
 
 **✅ 자동화 결과**
+
+
+https://github.com/user-attachments/assets/451cee4d-fbf4-4d11-9cec-222d1af246cb
+
 
 **✅ Cypress의 Commands 기능을 활용해 로그인이 필요한 화면에서 로그인 후 진행이 가능하도록 구현.**
 
