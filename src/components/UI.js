@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css, keyframes } from "styled-components";
 
 // ─── Button ───────────────────────────────────────────────────────────────────
 export const Button = styled.button`
@@ -6,38 +6,51 @@ export const Button = styled.button`
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: ${({ size }) => size === 'sm' ? '6px 14px' : size === 'lg' ? '14px 28px' : '10px 20px'};
-  font-size: ${({ size }) => size === 'sm' ? '13px' : size === 'lg' ? '16px' : '14px'};
+  padding: ${({ size }) =>
+    size === "sm" ? "6px 14px" : size === "lg" ? "14px 28px" : "10px 20px"};
+  font-size: ${({ size }) =>
+    size === "sm" ? "13px" : size === "lg" ? "16px" : "14px"};
   font-weight: 600;
   border-radius: ${({ theme }) => theme.radius.md};
   transition: all 0.15s ease;
   white-space: nowrap;
 
-  ${({ variant = 'primary', theme }) => {
+  ${({ variant = "primary", theme }) => {
     switch (variant) {
-      case 'secondary':
+      case "secondary":
         return css`
           background: ${theme.colors.secondary};
           color: ${theme.colors.text};
-          &:hover:not(:disabled) { background: ${theme.colors.border}; }
+          &:hover:not(:disabled) {
+            background: ${theme.colors.border};
+          }
         `;
-      case 'ghost':
+      case "ghost":
         return css`
           background: transparent;
           color: ${theme.colors.textMuted};
-          &:hover:not(:disabled) { background: ${theme.colors.secondary}; color: ${theme.colors.text}; }
+          &:hover:not(:disabled) {
+            background: ${theme.colors.secondary};
+            color: ${theme.colors.text};
+          }
         `;
-      case 'danger':
+      case "danger":
         return css`
           background: ${theme.colors.error};
           color: white;
-          &:hover:not(:disabled) { opacity: 0.88; }
+          &:hover:not(:disabled) {
+            opacity: 0.88;
+          }
         `;
       default:
         return css`
           background: ${theme.colors.primary};
           color: white;
-          &:hover:not(:disabled) { background: ${theme.colors.primaryHover}; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,91,219,0.3); }
+          &:hover:not(:disabled) {
+            background: ${theme.colors.primaryHover};
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 91, 219, 0.3);
+          }
         `;
     }
   }}
@@ -74,10 +87,14 @@ export const Input = styled.input`
   border: 1.5px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.md};
   color: ${({ theme }) => theme.colors.text};
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   outline: none;
 
-  &::placeholder { color: ${({ theme }) => theme.colors.textLight}; }
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textLight};
+  }
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -93,13 +110,17 @@ export const Textarea = styled.textarea`
   border: 1.5px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.md};
   color: ${({ theme }) => theme.colors.text};
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
   outline: none;
   resize: vertical;
   min-height: 120px;
   line-height: 1.6;
 
-  &::placeholder { color: ${({ theme }) => theme.colors.textLight}; }
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textLight};
+  }
 
   &:focus {
     border-color: ${({ theme }) => theme.colors.primary};
@@ -143,7 +164,7 @@ export const CenterContainer = styled.div`
 export const Divider = styled.hr`
   border: none;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-  margin: ${({ my = '20px' }) => `${my} 0`};
+  margin: ${({ my = "20px" }) => `${my} 0`};
 `;
 
 // ─── Avatar ────────────────────────────────────────────────────────────────────
