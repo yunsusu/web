@@ -170,7 +170,7 @@ export default function Navbar() {
             게시판
           </NavLink>
           <a
-            href="/QA_Copy.zip?v=1.0.0"
+            href="/QA_Copy.zip?v=1.0.1"
             download
             style={{
               padding: "6px 14px",
